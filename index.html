@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supercar Gallery</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 50%, #16213e 100%);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .particle {
+            position: absolute;
+            width: 300px;
+            height: 300px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { top: -10%; left: -10%; animation-delay: 0s; }
+        .particle:nth-child(2) { top: 60%; right: -10%; animation-delay: -5s; }
+        .particle:nth-child(3) { bottom: -10%; left: 30%; animation-delay: -10s; }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        .login-page {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-container {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            padding: 50px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+        }
+
+        .login-logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-logo h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .login-logo p {
+            color: rgba(255, 255, 255, 0.5);
+            margin-top: 8px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.85rem;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
+            box-shadow: 0 0 20px rgba(168, 192, 255, 0.2);
+        }
+
+        .form-group input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 14px;
+            color: #fff;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .login-error {
+            color: #ff6b6b;
+            font-size: 0.85rem;
+            text-align: center;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .main-page {
+            display: none;
+        }
+
+        .main-page.active {
+            display: block;
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        header .top-bar {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        header .user-info {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        header .logout-btn {
+            padding: 8px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+            display: none;
+        }
+
+        header .logout-btn:hover {
+            background: rgba(255, 107, 107, 0.3);
+            border-color: rgba(255, 107, 107, 0.5);
+        }
+
+        header .login-btn-header {
+            padding: 8px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 20px;
+            color: #fff;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        header .login-btn-header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        header .login-btn-header.hidden {
+            display: none;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #a8c0ff 50%, #fff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 60px rgba(168, 192, 255, 0.5);
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 1.1rem;
+            margin-top: 10px;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .search-filter-bar {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 20px;
+            padding: 20px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 14px 20px 14px 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 25px;
+            color: rgba(255, 255, 255, 0.7);
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        .results-count {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.85rem;
+            margin-left: auto;
+        }
+
+        .car-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(380px, 1fr));
+            gap: 40px;
+            padding: 20px;
+        }
+
+        .car-card {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            transform: perspective(1000px) rotateX(0deg);
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: none;
+        }
+
+        .car-card.show {
+            display: block;
+        }
+
+        .car-card:hover {
+            transform: perspective(1000px) rotateX(2deg) translateY(-10px);
+        }
+
+        .liquid-glass {
+            position: relative;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.2), inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+        }
+
+        .liquid-glass::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .car-card:hover .liquid-glass::before {
+            left: 100%;
+        }
+
+        .car-image {
+            width: 100%;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 30px 30px 0 0;
+        }
+
+        .car-info {
+            padding: 25px;
+        }
+
+        .car-name {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 5px;
+        }
+
+        .car-model {
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .car-brand {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 15px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 15px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .stat-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .stat-icon {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .engine-section {
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .engine-title {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .engine-specs {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .engine-spec {
+            color: #fff;
+            font-size: 0.95rem;
+        }
+
+        .engine-spec span {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .highlight {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: #000;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2.2rem; }
+            .car-grid { grid-template-columns: 1fr; }
+            .stats-grid { grid-template-columns: 1fr 1fr; }
+            .search-filter-bar { flex-direction: column; }
+            .results-count { margin-left: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <!-- Login Page -->
+    <div class="login-page" id="loginPage">
+        <div class="login-container">
+            <div class="login-logo">
+                <h1>Supercar Gallery</h1>
+                <p>Autentifică-te pentru a continua</p>
+            </div>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Username</label>
+                    <input type="text" id="username" placeholder="Introdu username-ul" required>
+                </div>
+                <div class="form-group">
+                    <label>Parola</label>
+                    <input type="password" id="password" placeholder="Introdu parola" required>
+                </div>
+                <button type="submit" class="login-btn">Autentificare</button>
+                <p class="login-error" id="loginError">Username sau parolă incorectă!</p>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Page -->
+    <div class="main-page" id="mainPage">
+        <header>
+            <div class="top-bar">
+                <span class="user-info" id="userInfo"></span>
+                <button class="login-btn-header" id="loginBtnHeader">Login Admin</button>
+                <button class="logout-btn" id="logoutBtn">Deconectare</button>
+            </div>
+            <h1>Supercar Gallery</h1>
+            <p class="subtitle">Experiența supremă în performanță automotive</p>
+        </header>
+
+        <div class="container">
+            <div class="search-filter-bar">
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Caută o mașină...">
+                </div>
+                <div class="filter-group">
+                    <button class="filter-btn active" data-filter="all">Toate</button>
+                    <button class="filter-btn" data-filter="Bugatti">Bugatti</button>
+                    <button class="filter-btn" data-filter="Ferrari">Ferrari</button>
+                    <button class="filter-btn" data-filter="McLaren">McLaren</button>
+                    <button class="filter-btn" data-filter="Lamborghini">Lamborghini</button>
+                    <button class="filter-btn" data-filter="Porsche">Porsche</button>
+                    <button class="filter-btn" data-filter="Rimac">Rimac</button>
+                    <button class="filter-btn" data-filter="Koenigsegg">Koenigsegg</button>
+                    <button class="filter-btn" data-filter="Aston Martin">Aston Martin</button>
+                </div>
+                <span class="results-count" id="resultsCount">0 mașini</span>
+            </div>
+
+            <div class="car-grid" id="carGrid">
+                <!-- Car 1: Bugatti Chiron -->
+                <div class="car-card show" data-brand="Bugatti">
+                    <div class="liquid-glass">
+                        <span class="highlight">Top Speed</span>
+                        <img src="https://images.unsplash.com/photo-1544636331-e26879cd4d9b?w=800&q=80" alt="Bugatti Chiron" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Bugatti</span>
+                            <h2 class="car-name">Bugatti Chiron</h2>
+                            <p class="car-model">Super Sport 300+</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">490</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">1600</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1500</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.4</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>8.0L</span> W16</div>
+                                    <div class="engine-spec"><span>1600Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Turbo</span> Quad</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 2: Ferrari LaFerrari -->
+                <div class="car-card show" data-brand="Ferrari">
+                    <div class="liquid-glass">
+                        <span class="highlight">Hybrid</span>
+                        <img src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?w=800&q=80" alt="Ferrari LaFerrari" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Ferrari</span>
+                            <h2 class="car-name">Ferrari LaFerrari</h2>
+                            <p class="car-model">Hypercars</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">350</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">9250</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">963</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.6</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>6.3L</span> V12 HY</div>
+                                    <div class="engine-spec"><span>900Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>KERS</span> Hybrid</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 3: McLaren P1 -->
+                <div class="car-card show" data-brand="McLaren">
+                    <div class="liquid-glass">
+                        <span class="highlight">Track</span>
+                        <img src="https://images.unsplash.com/photo-1614162692292-7ac56d7f7f1e?w=800&q=80" alt="McLaren P1" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">McLaren</span>
+                            <h2 class="car-name">McLaren P1</h2>
+                            <p class="car-model">GTR Edition</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">350</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">8500</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">916</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.8</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>3.8L</span> V8 Twin-T</div>
+                                    <div class="engine-spec"><span>900Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>IPAS</span> Hybrid</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 4: Lamborghini Aventador -->
+                <div class="car-card show" data-brand="Lamborghini">
+                    <div class="liquid-glass">
+                        <span class="highlight">Icon</span>
+                        <img src="https://images.unsplash.com/photo-1542282088-fe8426682b8f?w=800&q=80" alt="Lamborghini Aventador" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Lamborghini</span>
+                            <h2 class="car-name">Lamborghini Aventador</h2>
+                            <p class="car-model">SVJ Roadster</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">350</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">8500</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">770</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.8</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>6.5L</span> V12</div>
+                                    <div class="engine-spec"><span>720Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>ISR</span> Transmisie</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 5: Porsche 918 Spyder -->
+                <div class="car-card show" data-brand="Porsche">
+                    <div class="liquid-glass">
+                        <span class="highlight">Hybrid</span>
+                        <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=800&q=80" alt="Porsche 918 Spyder" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Porsche</span>
+                            <h2 class="car-name">Porsche 918 Spyder</h2>
+                            <p class="car-model">Weissach Package</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">345</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">9150</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">887</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.6</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>4.6L</span> V8 Hybrid</div>
+                                    <div class="engine-spec"><span>1280Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>PDK</span> Transmisie</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 6: Rimac Nevera -->
+                <div class="car-card show" data-brand="Rimac">
+                    <div class="liquid-glass">
+                        <span class="highlight">Electric</span>
+                        <img src="https://images.unsplash.com/photo-1618843479313-40f8afb4b4d8?w=800&q=80" alt="Rimac Nevera" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Rimac</span>
+                            <h2 class="car-name">Rimac Nevera</h2>
+                            <p class="car-model">All Electric</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">412</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">-</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1914</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">1.9</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>120kWh</span> Battery</div>
+                                    <div class="engine-spec"><span>2360Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>4x M</span> Motors</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 7: Koenigsegg Regera -->
+                <div class="car-card show" data-brand="Koenigsegg">
+                    <div class="liquid-glass">
+                        <span class="highlight">Hybrid</span>
+                        <img src="https://images.unsplash.com/photo-1542362567-b07e54358753?w=800&q=80" alt="Koenigsegg Regera" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Koenigsegg</span>
+                            <h2 class="car-name">Koenigsegg Regera</h2>
+                            <p class="car-model">Hybrid Hypercar</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">410</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">7800</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1500</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.8</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>5.0L</span> V8 Twin-T</div>
+                                    <div class="engine-spec"><span>2000Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Koenigsegg</span> Hybrid</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 8: Aston Martin Valkyrie -->
+                <div class="car-card show" data-brand="Aston Martin">
+                    <div class="liquid-glass">
+                        <span class="highlight">F1 Tech</span>
+                        <img src="https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=800&q=80" alt="Aston Martin Valkyrie" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Aston Martin</span>
+                            <h2 class="car-name">Aston Martin Valkyrie</h2>
+                            <p class="car-model">AMR Pro</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">402</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">10500</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1140</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.5</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>6.5L</span> V12 Hybrid</div>
+                                    <div class="engine-spec"><span>900Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Cosworth</span> V12</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 9: Bugatti Divo -->
+                <div class="car-card show" data-brand="Bugatti">
+                    <div class="liquid-glass">
+                        <span class="highlight">Track</span>
+                        <img src="https://images.unsplash.com/photo-1617531653332-bd46c24f2068?w=800&q=80" alt="Bugatti Divo" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Bugatti</span>
+                            <h2 class="car-name">Bugatti Divo</h2>
+                            <p class="car-model">L'Ore Blanc</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">380</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">1600</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1500</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.4</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>8.0L</span> W16</div>
+                                    <div class="engine-spec"><span>1600Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Turbo</span> Quad</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 10: Ferrari SF90 Stradale -->
+                <div class="car-card show" data-brand="Ferrari">
+                    <div class="liquid-glass">
+                        <span class="highlight">Plug-in Hybrid</span>
+                        <img src="https://images.unsplash.com/photo-1592198084033-aade902d1aae?w=800&q=80" alt="Ferrari SF90" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Ferrari</span>
+                            <h2 class="car-name">Ferrari SF90 Stradale</h2>
+                            <p class="car-model">Assetto Fiorano</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">340</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">7500</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1000</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.5</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>4.0L</span> V8 Twin-T</div>
+                                    <div class="engine-spec"><span>900Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Plug-in</span> Hybrid</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 11: McLaren Speedtail -->
+                <div class="car-card show" data-brand="McLaren">
+                    <div class="liquid-glass">
+                        <span class="highlight">Hyper-GT</span>
+                        <img src="https://images.unsplash.com/photo-1621135802920-133df287f89c?w=800&q=80" alt="McLaren Speedtail" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">McLaren</span>
+                            <h2 class="car-name">McLaren Speedtail</h2>
+                            <p class="car-model">Hyper-GT</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">403</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">8500</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">1035</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.9</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>4.0L</span> V8 Twin-T</div>
+                                    <div class="engine-spec"><span>1150Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>Hybrid</span> System</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Car 12: Lamborghini Veneno -->
+                <div class="car-card show" data-brand="Lamborghini">
+                    <div class="liquid-glass">
+                        <span class="highlight">Limited</span>
+                        <img src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=800&q=80" alt="Lamborghini Veneno" class="car-image">
+                        <div class="car-info">
+                            <span class="car-brand">Lamborghini</span>
+                            <h2 class="car-name">Lamborghini Veneno</h2>
+                            <p class="car-model">Roadster</p>
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <div class="stat-icon">🚀</div>
+                                    <div class="stat-value">355</div>
+                                    <div class="stat-label">km/h</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">🔄</div>
+                                    <div class="stat-value">8400</div>
+                                    <div class="stat-label">RPM</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⚡</div>
+                                    <div class="stat-value">750</div>
+                                    <div class="stat-label">CP</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-icon">⏱️</div>
+                                    <div class="stat-value">2.9</div>
+                                    <div class="stat-label">0-100 km/h</div>
+                                </div>
+                            </div>
+                            <div class="engine-section">
+                                <div class="engine-title">Motor</div>
+                                <div class="engine-specs">
+                                    <div class="engine-spec"><span>6.5L</span> V12</div>
+                                    <div class="engine-spec"><span>690Nm</span> Cuplu</div>
+                                    <div class="engine-spec"><span>ISR</span> Transmisie</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Login functionality
+            const loginForm = document.getElementById('loginForm');
+            const loginPage = document.getElementById('loginPage');
+            const mainPage = document.getElementById('mainPage');
+            const loginError = document.getElementById('loginError');
+            const userInfo = document.getElementById('userInfo');
+            const logoutBtn = document.getElementById('logoutBtn');
+            const loginBtnHeader = document.getElementById('loginBtnHeader');
+            const searchInput = document.getElementById('searchInput');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const carCards = document.querySelectorAll('.car-card');
+            const resultsCount = document.getElementById('resultsCount');
+
+            // Demo credentials
+            const validUser = 'admin';
+            const validPass = 'supercar';
+            let currentFilter = 'all';
+
+            function filterCars() {
+                const searchTerm = searchInput.value.toLowerCase();
+                let visibleCount = 0;
+
+                carCards.forEach(card => {
+                    const brand = card.dataset.brand.toLowerCase();
+                    const name = card.querySelector('.car-name').textContent.toLowerCase();
+                    const model = card.querySelector('.car-model').textContent.toLowerCase();
+
+                    const matchesSearch = searchTerm === '' || name.includes(searchTerm) || model.includes(searchTerm);
+                    const matchesFilter = currentFilter === 'all' || brand === currentFilter.toLowerCase();
+
+                    if (matchesSearch && matchesFilter) {
+                        card.classList.add('show');
+                        visibleCount++;
+                    } else {
+                        card.classList.remove('show');
+                    }
+                });
+
+                resultsCount.textContent = visibleCount + ' mașin' + (visibleCount === 1 ? 'ă' : 'i');
+            }
+
+            // Search event
+            if (searchInput) {
+                searchInput.addEventListener('input', filterCars);
+            }
+
+            // Filter buttons
+            if (filterBtns) {
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        filterBtns.forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                        currentFilter = this.dataset.filter;
+                        filterCars();
+                    });
+                });
+            }
+
+            // Check if admin is logged in
+            const isAdmin = localStorage.getItem('isAdmin');
+            
+            if (isAdmin === 'true') {
+                loginPage.style.display = 'none';
+                mainPage.classList.add('active');
+                userInfo.textContent = 'Admin: ' + localStorage.getItem('username');
+                logoutBtn.style.display = 'block';
+                loginBtnHeader.classList.add('hidden');
+            } else {
+                loginPage.style.display = 'none';
+                mainPage.classList.add('active');
+                userInfo.textContent = 'Vizitator';
+                logoutBtn.style.display = 'none';
+                loginBtnHeader.classList.remove('hidden');
+            }
+
+            // Login functionality (only for admin)
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    const user = document.getElementById('username').value;
+                    const pass = document.getElementById('password').value;
+
+                    if (user === validUser && pass === validPass) {
+                        localStorage.setItem('isAdmin', 'true');
+                        localStorage.setItem('username', user);
+                        loginPage.style.display = 'none';
+                        mainPage.classList.add('active');
+                        userInfo.textContent = 'Admin: ' + user;
+                        logoutBtn.style.display = 'block';
+                        loginBtnHeader.classList.add('hidden');
+                    } else {
+                        loginError.style.display = 'block';
+                    }
+                });
+            }
+
+            if (loginBtnHeader) {
+                loginBtnHeader.addEventListener('click', function() {
+                    loginPage.style.display = 'flex';
+                    mainPage.classList.remove('active');
+                });
+            }
+
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    localStorage.removeItem('isAdmin');
+                    localStorage.removeItem('username');
+                    userInfo.textContent = 'Vizitator';
+                    logoutBtn.style.display = 'none';
+                    loginBtnHeader.classList.remove('hidden');
+                });
+            }
+
+            // Initialize filter
+            filterCars();
+        });
+    </script>
+</body>
+</html>
